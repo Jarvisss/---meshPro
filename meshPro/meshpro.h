@@ -13,14 +13,14 @@
 #include <opencv2\imgproc\imgproc.hpp>
 #include "ui_meshpro.h"
 #include "myOpenGLWidget.h"
+#include "paraMesh.h"
 
-
-using namespace cv;
 
 namespace Ui {
 	class MainWindow;
 }
 
+using namespace std;
 
 class meshPro : public QMainWindow
 {
@@ -30,12 +30,18 @@ public:
 	meshPro(QWidget *parent = 0);
 	~meshPro();
 
+	void readMesh();
+	//void writeMesh(MyMesh*);
+
 private:
 	Ui::meshProClass ui;
-	QMenu* menu[10];
-	QAction* act[10];
-	Mat image;
 
+	myOpenGLWidget *newwidget=NULL;
+	QMenu		*menu[10];
+	QAction		*act[10];
+	paraMesh	*pMesh;
+	MyMesh		myMesh;
+	bool		is_loaded=false;
 
 private slots:
 	void triggerMenu(QAction* act);

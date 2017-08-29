@@ -31,7 +31,7 @@
 namespace Ui {
 class myOpenGLWidget;
 }
-
+using namespace std;
 
 typedef OpenMesh::TriMesh_ArrayKernelT<> MyMesh;
 
@@ -44,14 +44,14 @@ public:
     explicit myOpenGLWidget(QWidget *parent = 0);
     ~myOpenGLWidget();
 
-	void readMesh();
-	void writeMesh();
 	void loadTexture();
 	void setBackGroundTexture();
 
+	void initMesh(MyMesh*);
 	void setLight();
 	void render();
 	void drawPoint();
+	void draw2DTextureLines();
 	void drawEdge();
 	void drawFace();
 	void drawAxes();
@@ -82,19 +82,21 @@ protected:
 	//key func here
 	void wheelEvent(QWheelEvent *event);
 
-private:
 
+public:
 	int xRot;
 	int yRot;
 	int zRot;
 	bool showFace = false;
 	bool showWire = false;
 	bool showPoint = true;
-	bool is_load_texture=false;
-	bool showTexture = true;
+	bool is_load_texture = false;
+	bool show2DTexture = false;
 	bool showAxes = true;
 	bool showLight = true;
+	GLuint		texture_[1];
 
+private:
 	CArcBall	*ptr_arcball_;
 	GLubyte		*pixels;
 	int			p_width;
@@ -102,10 +104,9 @@ private:
 	GLfloat		eye_distance_;
 	GLfloat		eye_goal_[3];
 	GLfloat		eye_direction_[3];
-	MyMesh		myMesh;
+	MyMesh		*myMesh=NULL;
 	double		scale;
-	QOpenGLTexture *texture;
-	GLuint		texture_[1];
+	
 
 	QPoint		current_position_;;
 };

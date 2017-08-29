@@ -175,6 +175,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="meshpro.cpp" />
     <ClCompile Include="myOpenGLWidget.cpp" />
+    <ClCompile Include="paraMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="meshpro.h">
@@ -219,6 +220,7 @@
   <ItemGroup>
     <ClInclude Include="ArcBall.h" />
     <ClInclude Include="GeneratedFiles\ui_meshpro.h" />
+    <ClInclude Include="paraMesh.h" />
     <CustomBuild Include="myOpenGLWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing myOpenGLWidget.h...</Message>

@@ -34,8 +34,7 @@ meshPro::meshPro(QWidget *parent)
 	menu[1]->addAction(act[1]);
 
 	menu[2] = new QMenu("Tools");
-	act[2] = new QAction("Smooth", this);
-	act[2]->setEnabled(false);
+	act[2] = new QAction("Parameterize", this);
 	menu[2]->addAction(act[2]);
 	
 
@@ -67,17 +66,77 @@ void meshPro::triggerMenu(QAction* act)
 	if (act->text() == "OpenImg")
 	{
 		ui.myWidget->loadTexture();	
+		
 		update();
 	}
 	if (act->text() == "OpenMesh")
 	{		
-		ui.myWidget->readMesh();
+		readMesh();
 		update();
 	}
-	if (act->text() == "Smooth"){
+	if (act->text() == "Parameterize"){
+		// for uniform parameter
+		// test...
+		if (is_loaded){
+			newwidget = new myOpenGLWidget();
+			
+			pMesh = new paraMesh(2, &myMesh);
+			pMesh->para();
+			
+			newwidget->initMesh(pMesh->getMesh());
+			newwidget->show2DTexture = true;
+			newwidget->showFace = false;
+			newwidget->showPoint = false;
+			newwidget->loadTexture();
+			newwidget->show();
+			newwidget->update();
+		}
 		
-		//displayMat(image, ui.imgLabel);
 	}
 
+}
+
+void meshPro::readMesh(){
+	QString fileName = QFileDialog::getOpenFileName(this, tr("open file"), " ", tr("meshFile(*.obj *.off *.ply *.3ds);;Allfile(*.*)"));
+	QTextCodec *code = QTextCodec::codecForName("gb18030");
+	std::string filename = code->fromUnicode(fileName).data();
+
+	// 请求顶点法线 vertex normals
+	myMesh.request_vertex_normals();
+	myMesh.request_vertex_texcoords2D();
+	//如果不存在顶点法线，则报错 
+	if (!myMesh.has_vertex_normals())
+	{
+		qDebug() << "error: no normal read" << endl;
+		return;
+	}
+	//if (!myMesh.has_vertex_texcoords2D())
+	//{
+	//	qDebug() << "error: no tex read" << endl;
+	//	return;
+	//}
+	//// 如果有纹理发现则读取文件 
+	OpenMesh::IO::Options opt = 0x0000;
+	if (!OpenMesh::IO::read_mesh(myMesh, filename,opt))
+	{
+		//qDebug() << "error: can't read file: " << filename << endl;
+		return;
+	}
+	else
+		qDebug() << "read success: " << endl;
+
+	std::cout << endl; // 为了ui显示好看一些
+	//如果不存在顶点法线，则计算出
+	if (!opt.check(OpenMesh::IO::Options::VertexNormal))
+	{
+		// 通过面法线计算顶点法线
+		myMesh.request_face_normals();
+		// mesh计算出顶点法线
+		myMesh.update_normals();
+		// 释放面法线
+		myMesh.release_face_normals();
+	}
+	ui.myWidget->initMesh(&myMesh);
+	is_loaded = true;
 }
 

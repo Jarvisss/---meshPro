@@ -10,7 +10,5 @@ int main(int argc, char *argv[])
 	meshPro w;
 	w.show();
 
-	
-
 	return a.exec();
 }

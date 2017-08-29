@@ -3,21 +3,37 @@
 
 #include <OpenMesh/Core/IO/MeshIO.hh>  // 读取文件
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh> // 操作文件 
+#include <OpenMesh\Core\Mesh\Handles.hh>
+//#include <OpenMesh\Core\Mesh\PolyConnectivity.hh>
 #include <vector>
 #include <Eigen/dense>
+#include <qdebug.h>
 
+const double inf = 0.0000001;
+const double PI = 3.1415926;
 using namespace Eigen;
 using std::vector;
 
 typedef OpenMesh::TriMesh_ArrayKernelT<> MyMesh;
 
 class paraMesh{
-	MyMesh				*ptrMesh;
+	MyMesh				mesh;
+	int					totalVertices;
+	//MyMesh				*ptrMesh;
 	int					type;
 
-	vector<Vector3d>	bd_pts;
-	vector<Vector3d>	in_pts;
+	OpenMesh::VPropHandleT<bool>VH_Bool;
+	OpenMesh::VPropHandleT<double>VH_Double;
+	
+	vector<MyMesh::HalfedgeHandle> h_handle;
+	MatrixXd CoefficientMatrix;
+	MatrixXd u;
+	MatrixXd b;
 
+
+	vector<int>	bd_pts;
+	vector<int>	in_pts;
+	vector<OpenMesh::Vec2f>	result;
 
 public:
 	/*
@@ -32,20 +48,24 @@ public:
 	/* calculate parameterized surface according to different types of parameterization */
 	void para();
 
+
 	/*
-	* calculate the border points and save into v_Border
+	* calculate the border points' plannar position
 	*/
 	void calBorderPoints();
 
 	/*
-	* calculate the border points and save into v_Inner
+	* find border edges and save into 'h_handle'
+	*/
+	void findBorderEdges();
+
+	/*
+	* calculate the inner points' plannar position
 	*/
 	void calInnerPoints();
 
-	/*
-	* do the parameterize according to type
-	*/
-	void parameterize();
+	vector<float> shape_preserve(int);
+	MyMesh* getMesh();
 
 };
 

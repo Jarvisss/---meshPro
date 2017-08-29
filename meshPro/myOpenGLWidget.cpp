@@ -14,8 +14,6 @@ myOpenGLWidget::~myOpenGLWidget()
 	delete[] ptr_arcball_;
 	/*if (myMesh)
 		delete[]myMesh;*/
-	if (texture)
-		delete[]texture;
 }
 void myOpenGLWidget::check_edge_state(int state){
 	showWire = state == Qt::Checked;
@@ -30,7 +28,7 @@ void myOpenGLWidget::check_point_state(int state){
 	update();
 }
 void myOpenGLWidget::check_texture_state(int state){
-	showTexture = state == Qt::Checked;
+	show2DTexture = state == Qt::Checked;
 	update();
 }
 void myOpenGLWidget::check_light_state(int state){
@@ -59,122 +57,98 @@ void myOpenGLWidget::setLight()
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 }
+
+void myOpenGLWidget::initMesh(MyMesh* themesh){
+	this->myMesh = themesh;
+}
+
 void myOpenGLWidget::render(){
-	if (showFace)
-		drawFace();
-	if (showWire)
-		drawEdge();
-	if (showPoint)
-		drawPoint();
-	if (showTexture)
-		// do texture here
-		;
+	if (myMesh!=NULL){
+		if (showFace)
+			drawFace();
+		if (showWire)
+			drawEdge();
+		if (showPoint)
+			drawPoint();
+		if (show2DTexture)
+			draw2DTextureLines();
+			
+	}
+		
 	if (showAxes)
 		drawAxes();
-	//if (is_load_texture&&showTexture)
-		//drawTexture();
-	//drawSphere();
-	//draw();
 }
-void myOpenGLWidget::readMesh(){
-	QString fileName = QFileDialog::getOpenFileName(this, tr("open file"), " ", tr("meshFile(*.obj *.off *.ply *.3ds);;Allfile(*.*)"));
-	QTextCodec *code = QTextCodec::codecForName("gb18030");
-	std::string filename = code->fromUnicode(fileName).data();
-	
-	// 请求顶点法线 vertex normals
-	myMesh.request_vertex_normals();
-	myMesh.request_vertex_texcoords2D();
-	//如果不存在顶点法线，则报错 
-	if (!myMesh.has_vertex_normals())
-	{
-		qDebug() << "error: no normal read" << endl;
-		return;
-	}
-	if (!myMesh.has_vertex_texcoords2D())
-	{
-		qDebug() << "error: no tex read" << endl;
-		return;
-	}
-	// 如果有纹理发现则读取文件 
-	OpenMesh::IO::Options opt = 0x0040;
-	if (!OpenMesh::IO::read_mesh(myMesh, filename, opt))
-	{
-		//qDebug() << "error: can't read file: " << filename << endl;
-		return;
-	}
-	else 
-		qDebug() << "read success: " << endl;
 
-	std::cout << endl; // 为了ui显示好看一些
-	//如果不存在顶点法线，则计算出
-	if (!opt.check(OpenMesh::IO::Options::VertexNormal))
-	{
-		// 通过面法线计算顶点法线
-		myMesh.request_face_normals();
-		// mesh计算出顶点法线
-		myMesh.update_normals();
-		// 释放面法线
-		myMesh.release_face_normals();
-	}
-}
-void myOpenGLWidget::writeMesh(){
-	QString fileName = QFileDialog::getOpenFileName(this, tr("open file"), " ", tr("meshFile(*.obj *.off *.ply *.3ds);;Allfile(*.*)"));
-	QTextCodec *code = QTextCodec::codecForName("gb18030");
-	std::string filename = code->fromUnicode(fileName).data();
-
-	// 请求顶点法线 vertex normals
-	myMesh.request_vertex_normals();
-	//如果不存在顶点法线，则报错 
-	if (!myMesh.has_vertex_normals())
-	{
-		qDebug() << "error: no normal read" << endl;
-		return;
-	}
-	// 如果有顶点发现则读取文件 
-	OpenMesh::IO::Options opt;
-	if (!OpenMesh::IO::read_mesh(myMesh, filename, opt))
-	{
-		//qDebug() << "error: can't read file: " << filename << endl;
-		return;
-	}
-	else
-		qDebug() << "read success: " << endl;
-	std::cout << endl; // 为了ui显示好看一些
-	//如果不存在顶点法线，则计算出
-	if (!opt.check(OpenMesh::IO::Options::VertexNormal))
-	{
-		// 通过面法线计算顶点法线
-		myMesh.request_face_normals();
-		// mesh计算出顶点法线
-		myMesh.update_normals();
-		// 释放面法线
-		myMesh.release_face_normals();
-	}
-}
+//void myOpenGLWidget::writeMesh(){
+//	QString fileName = QFileDialog::getOpenFileName(this, tr("open file"), " ", tr("meshFile(*.obj *.off *.ply *.3ds);;Allfile(*.*)"));
+//	QTextCodec *code = QTextCodec::codecForName("gb18030");
+//	std::string filename = code->fromUnicode(fileName).data();
+//
+//	// 请求顶点法线 vertex normals
+//	myMesh->request_vertex_normals();
+//	//如果不存在顶点法线，则报错 
+//	if (!myMesh->has_vertex_normals())
+//	{
+//		qDebug() << "error: no normal read" << endl;
+//		return;
+//	}
+//	// 如果有顶点发现则读取文件 
+//	OpenMesh::IO::Options opt;
+//	if (!OpenMesh::IO::write_mesh(myMesh, filename, opt))
+//	{
+//		//qDebug() << "error: can't read file: " << filename << endl;
+//		return;
+//	}
+//	else
+//		qDebug() << "read success: " << endl;
+//	std::cout << endl; // 为了ui显示好看一些
+//	//如果不存在顶点法线，则计算出
+//	if (!opt.check(OpenMesh::IO::Options::VertexNormal))
+//	{
+//		// 通过面法线计算顶点法线
+//		myMesh->request_face_normals();
+//		// mesh计算出顶点法线
+//		myMesh->update_normals();
+//		// 释放面法线
+//		myMesh->release_face_normals();
+//	}
+//}
 void myOpenGLWidget::drawPoint(){
 	glPointSize(2);
 	glBegin(GL_POINTS);
-	for (auto it = myMesh.vertices_begin(); it != myMesh.vertices_end(); ++it)
+	for (auto it = myMesh->vertices_begin(); it != myMesh->vertices_end(); ++it)
 	{
-		auto point = myMesh.point(it.handle()).data();
+		auto point = myMesh->point(it.handle()).data();
 		glVertex3fv(point);
 	}
 	glEnd();
 	glPointSize(1);
 }
+
+
+void myOpenGLWidget::draw2DTextureLines(){
+	glBegin(GL_LINES);
+
+	for (auto it = myMesh->halfedges_begin(); it != myMesh->halfedges_end(); ++it){
+		auto frompt = myMesh->texcoord2D(myMesh->from_vertex_handle(it.handle())).data();
+		auto topt = myMesh->texcoord2D(myMesh->to_vertex_handle(it.handle())).data();
+
+		glVertex2fv(frompt);
+		glVertex2fv(topt);
+	}
+	glEnd();
+}
 void myOpenGLWidget::drawEdge(){
-	glLineWidth(2);
 	glBegin(GL_LINES);
 	
-	for (auto it = myMesh.halfedges_begin(); it != myMesh.halfedges_end();++it){
-		auto frompt = myMesh.point(myMesh.from_vertex_handle(it.handle())).data();
-		auto topt = myMesh.point(myMesh.to_vertex_handle(it.handle())).data();
+	for (auto it = myMesh->halfedges_begin(); it != myMesh->halfedges_end(); ++it){
+		auto frompt = myMesh->point(myMesh->from_vertex_handle(it.handle())).data();
+		auto topt = myMesh->point(myMesh->to_vertex_handle(it.handle())).data();
 		
 		glVertex3fv(frompt);
 		glVertex3fv(topt);
 	}
 	glEnd();
-	glLineWidth(1);
 
 	
 }
@@ -182,13 +156,13 @@ void myOpenGLWidget::drawFace(){
 	
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture_[0]);
-	for (auto f_it = myMesh.faces_begin(); f_it != myMesh.faces_end(); ++f_it){
+	for (auto f_it = myMesh->faces_begin(); f_it != myMesh->faces_end(); ++f_it){
 		glBegin(GL_TRIANGLES);
-		for (auto fv_it = myMesh.fv_iter(*f_it); fv_it.is_valid(); ++fv_it){
+		for (auto fv_it = myMesh->fv_iter(*f_it); fv_it.is_valid(); ++fv_it){
 			
-			glTexCoord2fv(myMesh.texcoord2D(*fv_it).data());
-			glNormal3fv(myMesh.normal(*fv_it).data());
-			glVertex3fv(myMesh.point(*fv_it).data());
+			glTexCoord2fv(myMesh->texcoord2D(*fv_it).data());
+			glNormal3fv(myMesh->normal(*fv_it).data());
+			glVertex3fv(myMesh->point(*fv_it).data());
 		}
 		glEnd();
 	}
@@ -235,21 +209,6 @@ void myOpenGLWidget::drawAxes()
 
 	glColor3f(1.0, 1.0, 1.0);
 }
-//void myOpenGLWidget::initTexture(QString name)
-//{
-//	texture = new QOpenGLTexture(QImage(name).mirrored());
-//	  // Set nearest filtering mode for texture minification  
-//    texture->setMinificationFilter(QOpenGLTexture::Nearest);  
-//  
-//    // Set bilinear filtering mode for texture magnification  
-//    texture->setMagnificationFilter(QOpenGLTexture::Linear);  
-//  
-//    // Wrap texture coordinates by repeating  
-//    // f.ex. texture coordinate (1.1, 1.2) is same as (0.1, 0.2)  
-//    texture->setWrapMode(QOpenGLTexture::Repeat);
-//
-//
-//}
 
 void myOpenGLWidget::loadTexture(){
 	qDebug() << "load" << endl;
@@ -282,7 +241,7 @@ void myOpenGLWidget::loadTexture(){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	//std::cout << "33" << endl;
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, p_width, p_height, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
-	//free(pixels);
+	free(pixels);
 	is_load_texture = true;
 }
 void myOpenGLWidget::setBackGroundTexture(){
