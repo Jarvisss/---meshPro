@@ -40,7 +40,7 @@ void paraMesh::findBorderEdges(){
 	// find one border point
 	for (auto it = mesh.vertices_begin(); it != mesh.vertices_end(); ++it)
 	{
-		if (mesh.is_boundary(it.handle())){
+		if (mesh.is_boundary(mesh.halfedge_handle(*it))){
 			temp_vh_it = it.handle();
 			break;
 		}	
@@ -51,8 +51,8 @@ void paraMesh::findBorderEdges(){
 	// find border edges
 	while (true){
 		// 深度优先搜索
-		for (MyMesh::VertexOHalfedgeCWIter VOH_it = mesh.voh_cwbegin(temp_vh_it); VOH_it != mesh.voh_cwend(temp_vh_it); ++VOH_it){
-			// 这条向外的半边是网格边界
+		for (MyMesh::VertexOHalfedgeCCWIter VOH_it = mesh.voh_ccwbegin(temp_vh_it); VOH_it != mesh.voh_ccwend(temp_vh_it); ++VOH_it){
+			// 这条向外的半边是网格边界;逆时针遍历
 			if (mesh.is_boundary(*VOH_it)){
 				// 半边的目标点
 				MyMesh::VertexHandle temp_in_v = mesh.to_vertex_handle(*VOH_it);
@@ -92,6 +92,7 @@ void paraMesh::calBorderPoints(){
 	float temp_sum = 0.0;
 
 	// calculate length
+	
 	for (auto it = h_handle.begin(); it != h_handle.end(); ++it){
 		MyMesh::VertexHandle VH_it_to = mesh.to_vertex_handle(*it);
 		MyMesh::VertexHandle VH_it_from = mesh.from_vertex_handle(*it);
@@ -107,13 +108,16 @@ void paraMesh::calBorderPoints(){
 	for (auto it = mesh.vertices_begin(); it != mesh.vertices_end(); it++){
 		if (mesh.is_boundary(mesh.halfedge_handle(*it))){
 			float arf = (mesh.property(VH_Double, *it) / sum);
+			qDebug() << "af" << arf;
 			float unitscale = 0.25;
+			float bias = 0.625;
 			float point_x = 0.0;
 			float point_y = 0.0;
-			if (unitscale > arf)	{ point_x = arf * 4.0;			point_y = 0.0; }
-			else if (unitscale*2.0 > arf){ point_x = 1.0;			point_y = (arf - unitscale)*4.0; }
-			else if (unitscale*3.0 > arf){ point_x = (unitscale * 3 - arf)*4.0;		point_y = 1.0; }
-			else if (unitscale*4.0 > arf){ point_x = 0.0;							point_y = (unitscale*4.0 - arf)*4.0; }
+			float actual_arf = (arf + bias) > 1 ? arf + bias - 1 : arf + bias;
+			if (unitscale > actual_arf)	{ point_y = actual_arf * 4.0;			point_x = 0.0; }
+			else if (unitscale*2.0 > actual_arf){ point_y = 1.0;			point_x = (actual_arf - unitscale)*4.0; }
+			else if (unitscale*3.0 > actual_arf){ point_y = (unitscale * 3 - actual_arf)*4.0;		point_x = 1.0; }
+			else if (unitscale*4.0 > actual_arf){ point_y = 0.0;							point_x = (unitscale*4.0 - actual_arf)*4.0; }
 
 			vector<int>::iterator iter;
 			int index;
@@ -136,6 +140,8 @@ void paraMesh::calBorderPoints(){
 
 		//cout << (*it).idx() << endl;  
 	}
+
+
 	qDebug() << "totalInnerVertices" << in_pts.size();
 }
 

@@ -2,7 +2,7 @@
 #define MYOPENGLWIDGET_H
 
 #include <qopenglwidget.h>
-#include <qopenglfunctions.h>
+
 #include <qopengltexture.h>
 #include <QMouseEvent>
 #include <QFileDialog>
@@ -20,7 +20,7 @@
 #include <math.h>
 #include <Windows.h>
 #include <string>
-
+#include <qopenglfunctions.h>
 
 
 #define MAXSCALE 50
@@ -31,8 +31,6 @@
 namespace Ui {
 class myOpenGLWidget;
 }
-using namespace std;
-
 typedef OpenMesh::TriMesh_ArrayKernelT<> MyMesh;
 
 
@@ -66,6 +64,10 @@ public slots:
 	void check_light_state(int state);
 	void check_axes_state(int state);
 
+	void setWheelSpeed(int);
+	void setLightPositionX(int);
+	void setLightPositionY(int);
+	void setLightPositionZ(int);
 signals:
 	// signaling rotation from mouse movement
 
@@ -74,7 +76,6 @@ protected:
 	void paintGL();
 	void resizeGL(int width, int height);
 	void timerEvent(QTimerEvent *e);
-
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
@@ -94,6 +95,10 @@ public:
 	bool show2DTexture = false;
 	bool showAxes = true;
 	bool showLight = true;
+	float WheelSpeed = 0.001;
+	GLfloat light_position[4];
+
+	GLuint		uiVBO[2];
 	GLuint		texture_[1];
 
 private:
@@ -105,6 +110,7 @@ private:
 	GLfloat		eye_goal_[3];
 	GLfloat		eye_direction_[3];
 	MyMesh		*myMesh=NULL;
+	int			totalVertices;
 	double		scale;
 	
 

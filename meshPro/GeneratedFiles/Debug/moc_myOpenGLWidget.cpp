@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_myOpenGLWidget_t {
-    QByteArrayData data[9];
-    char stringdata0[129];
+    QByteArrayData data[13];
+    char stringdata0[197];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -37,13 +37,19 @@ QT_MOC_LITERAL(4, 39, 16), // "check_face_state"
 QT_MOC_LITERAL(5, 56, 17), // "check_point_state"
 QT_MOC_LITERAL(6, 74, 19), // "check_texture_state"
 QT_MOC_LITERAL(7, 94, 17), // "check_light_state"
-QT_MOC_LITERAL(8, 112, 16) // "check_axes_state"
+QT_MOC_LITERAL(8, 112, 16), // "check_axes_state"
+QT_MOC_LITERAL(9, 129, 13), // "setWheelSpeed"
+QT_MOC_LITERAL(10, 143, 17), // "setLightPositionX"
+QT_MOC_LITERAL(11, 161, 17), // "setLightPositionY"
+QT_MOC_LITERAL(12, 179, 17) // "setLightPositionZ"
 
     },
     "myOpenGLWidget\0check_edge_state\0\0state\0"
     "check_face_state\0check_point_state\0"
     "check_texture_state\0check_light_state\0"
-    "check_axes_state"
+    "check_axes_state\0setWheelSpeed\0"
+    "setLightPositionX\0setLightPositionY\0"
+    "setLightPositionZ"
 };
 #undef QT_MOC_LITERAL
 
@@ -53,7 +59,7 @@ static const uint qt_meta_data_myOpenGLWidget[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+      10,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -61,12 +67,16 @@ static const uint qt_meta_data_myOpenGLWidget[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   44,    2, 0x0a /* Public */,
-       4,    1,   47,    2, 0x0a /* Public */,
-       5,    1,   50,    2, 0x0a /* Public */,
-       6,    1,   53,    2, 0x0a /* Public */,
-       7,    1,   56,    2, 0x0a /* Public */,
-       8,    1,   59,    2, 0x0a /* Public */,
+       1,    1,   64,    2, 0x0a /* Public */,
+       4,    1,   67,    2, 0x0a /* Public */,
+       5,    1,   70,    2, 0x0a /* Public */,
+       6,    1,   73,    2, 0x0a /* Public */,
+       7,    1,   76,    2, 0x0a /* Public */,
+       8,    1,   79,    2, 0x0a /* Public */,
+       9,    1,   82,    2, 0x0a /* Public */,
+      10,    1,   85,    2, 0x0a /* Public */,
+      11,    1,   88,    2, 0x0a /* Public */,
+      12,    1,   91,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int,    3,
@@ -75,6 +85,10 @@ static const uint qt_meta_data_myOpenGLWidget[] = {
     QMetaType::Void, QMetaType::Int,    3,
     QMetaType::Void, QMetaType::Int,    3,
     QMetaType::Void, QMetaType::Int,    3,
+    QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void, QMetaType::Int,    2,
 
        0        // eod
 };
@@ -91,6 +105,10 @@ void myOpenGLWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 3: _t->check_texture_state((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 4: _t->check_light_state((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 5: _t->check_axes_state((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 6: _t->setWheelSpeed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 7: _t->setLightPositionX((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 8: _t->setLightPositionY((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 9: _t->setLightPositionZ((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -121,13 +139,13 @@ int myOpenGLWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 10;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
+        if (_id < 10)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 6;
+        _id -= 10;
     }
     return _id;
 }

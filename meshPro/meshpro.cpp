@@ -34,10 +34,12 @@ meshPro::meshPro(QWidget *parent)
 	menu[1]->addAction(act[1]);
 
 	menu[2] = new QMenu("Tools");
-	act[2] = new QAction("Parameterize", this);
-	menu[2]->addAction(act[2]);
-	
-
+	menu[3] = new QMenu("Parameterize",this);
+	act[2] = new QAction("Uniform", this);
+	act[3] = new QAction("Shape-preserve", this);
+	menu[3]->addAction(act[2]);
+	menu[3]->addAction(act[3]);
+	menu[2]->addMenu(menu[3]);
 
 	ui.menuBar->addMenu(menu[0]);
 	ui.menuBar->addMenu(menu[1]);
@@ -67,31 +69,47 @@ void meshPro::triggerMenu(QAction* act)
 	{
 		ui.myWidget->loadTexture();	
 		
-		update();
+		ui.myWidget->update();
 	}
 	if (act->text() == "OpenMesh")
 	{		
 		readMesh();
-		update();
+		ui.myWidget->update();
 	}
-	if (act->text() == "Parameterize"){
+	if (act->text() == "Uniform"){
 		// for uniform parameter
 		// test...
 		if (is_loaded){
-			newwidget = new myOpenGLWidget();
+			//newwidget = new myOpenGLWidget();
 			
-			pMesh = new paraMesh(2, &myMesh);
+			pMesh = new paraMesh(1, &myMesh);
 			pMesh->para();
+
+			myMesh = *(pMesh->getMesh());
+			delete pMesh;
 			
+			ui.myWidget->update();
+			/*newwidget->loadTexture();
 			newwidget->initMesh(pMesh->getMesh());
 			newwidget->show2DTexture = true;
-			newwidget->showFace = false;
+			newwidget->showFace = true;
 			newwidget->showPoint = false;
-			newwidget->loadTexture();
+			
 			newwidget->show();
-			newwidget->update();
+			newwidget->update();*/
 		}
 		
+	}
+	if (act->text() == "Shape-preserve"){
+		if (is_loaded){
+			pMesh = new paraMesh(2, &myMesh);
+			pMesh->para();
+
+			myMesh = *(pMesh->getMesh());
+			delete pMesh;
+			
+			ui.myWidget->update();
+		}
 	}
 
 }
@@ -100,43 +118,48 @@ void meshPro::readMesh(){
 	QString fileName = QFileDialog::getOpenFileName(this, tr("open file"), " ", tr("meshFile(*.obj *.off *.ply *.3ds);;Allfile(*.*)"));
 	QTextCodec *code = QTextCodec::codecForName("gb18030");
 	std::string filename = code->fromUnicode(fileName).data();
+	if (filename.length() > 0)
+	{
+		// 请求顶点法线 vertex normals
+		myMesh.request_vertex_normals();
+		myMesh.request_vertex_texcoords2D();
+		//如果不存在顶点法线，则报错 
+		if (!myMesh.has_vertex_normals())
+		{
+			qDebug() << "error: no normal read" << endl;
+			return;
+		}
+		//if (!myMesh.has_vertex_texcoords2D())
+		//{
+		//	qDebug() << "error: no tex read" << endl;
+		//	return;
+		//}
+		//// 如果有纹理发现则读取文件 
+		OpenMesh::IO::Options opt = 0x0000;
+		if (!OpenMesh::IO::read_mesh(myMesh, filename, opt))
+		{
+			//qDebug() << "error: can't read file: " << filename << endl;
+			return;
+		}
+		else
+			qDebug() << "read success: " << endl;
 
-	// 请求顶点法线 vertex normals
-	myMesh.request_vertex_normals();
-	myMesh.request_vertex_texcoords2D();
-	//如果不存在顶点法线，则报错 
-	if (!myMesh.has_vertex_normals())
-	{
-		qDebug() << "error: no normal read" << endl;
-		return;
-	}
-	//if (!myMesh.has_vertex_texcoords2D())
-	//{
-	//	qDebug() << "error: no tex read" << endl;
-	//	return;
-	//}
-	//// 如果有纹理发现则读取文件 
-	OpenMesh::IO::Options opt = 0x0000;
-	if (!OpenMesh::IO::read_mesh(myMesh, filename,opt))
-	{
-		//qDebug() << "error: can't read file: " << filename << endl;
-		return;
+		std::cout << endl; // 为了ui显示好看一些
+		//如果不存在顶点法线，则计算出
+		if (!opt.check(OpenMesh::IO::Options::VertexNormal))
+		{
+			// 通过面法线计算顶点法线
+			myMesh.request_face_normals();
+			// mesh计算出顶点法线
+			myMesh.update_normals();
+			// 释放面法线
+			myMesh.release_face_normals();
+		}
+		ui.myWidget->initMesh(&myMesh);
+		is_loaded = true;
 	}
 	else
-		qDebug() << "read success: " << endl;
-
-	std::cout << endl; // 为了ui显示好看一些
-	//如果不存在顶点法线，则计算出
-	if (!opt.check(OpenMesh::IO::Options::VertexNormal))
-	{
-		// 通过面法线计算顶点法线
-		myMesh.request_face_normals();
-		// mesh计算出顶点法线
-		myMesh.update_normals();
-		// 释放面法线
-		myMesh.release_face_normals();
-	}
-	ui.myWidget->initMesh(&myMesh);
-	is_loaded = true;
+		return;
+	
 }
 

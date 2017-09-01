@@ -22,6 +22,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
@@ -35,34 +36,33 @@ class Ui_meshProClass
 public:
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_3;
-    myOpenGLWidget *myWidget;
     QHBoxLayout *horizontalLayout;
     QGridLayout *gridLayout_2;
+    QSpacerItem *horizontalSpacer_5;
     QCheckBox *is_show_light;
     QCheckBox *is_show_edge;
-    QCheckBox *checkBox_4;
     QCheckBox *is_show_face;
     QCheckBox *is_show_point;
-    QCheckBox *checkBox_6;
-    QCheckBox *is_show_axes;
-    QCheckBox *checkBox_9;
     QSpacerItem *horizontalSpacer_2;
+    QCheckBox *is_show_axes;
     QCheckBox *is_show_texture;
-    QSpacerItem *horizontalSpacer;
     QSpacerItem *horizontalSpacer_4;
+    QSpacerItem *horizontalSpacer;
     QSpacerItem *horizontalSpacer_3;
-    QSpacerItem *horizontalSpacer_5;
     QSpacerItem *horizontalSpacer_6;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_3;
-    QLabel *RotX;
-    QSlider *RotXSlider;
+    QLabel *WheelSpeed;
+    QSlider *WheelS;
+    QLabel *label_3;
     QHBoxLayout *horizontalLayout_4;
     QLabel *RotY;
-    QSlider *RotYSlider;
-    QHBoxLayout *horizontalLayout_5;
-    QLabel *RotZ;
-    QSlider *RotZSlider;
+    QSpinBox *LightX;
+    QLabel *label;
+    QSpinBox *LightY;
+    QLabel *label_2;
+    QSpinBox *LightZ;
+    myOpenGLWidget *myWidget;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -92,21 +92,16 @@ public:
         verticalLayout_3->setSpacing(6);
         verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
-        myWidget = new myOpenGLWidget(centralWidget);
-        myWidget->setObjectName(QStringLiteral("myWidget"));
-        sizePolicy1.setHeightForWidth(myWidget->sizePolicy().hasHeightForWidth());
-        myWidget->setSizePolicy(sizePolicy1);
-        myWidget->setMinimumSize(QSize(0, 0));
-        myWidget->setMaximumSize(QSize(1368, 1312313));
-
-        verticalLayout_3->addWidget(myWidget);
-
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         gridLayout_2 = new QGridLayout();
         gridLayout_2->setSpacing(6);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_2->addItem(horizontalSpacer_5, 1, 3, 1, 1);
+
         is_show_light = new QCheckBox(centralWidget);
         is_show_light->setObjectName(QStringLiteral("is_show_light"));
         QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Fixed);
@@ -122,11 +117,6 @@ public:
 
         gridLayout_2->addWidget(is_show_edge, 0, 0, 1, 1);
 
-        checkBox_4 = new QCheckBox(centralWidget);
-        checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
-
-        gridLayout_2->addWidget(checkBox_4, 0, 4, 1, 1);
-
         is_show_face = new QCheckBox(centralWidget);
         is_show_face->setObjectName(QStringLiteral("is_show_face"));
 
@@ -137,45 +127,31 @@ public:
 
         gridLayout_2->addWidget(is_show_point, 2, 0, 1, 1);
 
-        checkBox_6 = new QCheckBox(centralWidget);
-        checkBox_6->setObjectName(QStringLiteral("checkBox_6"));
+        horizontalSpacer_2 = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        gridLayout_2->addWidget(checkBox_6, 1, 4, 1, 1);
+        gridLayout_2->addItem(horizontalSpacer_2, 1, 1, 1, 1);
 
         is_show_axes = new QCheckBox(centralWidget);
         is_show_axes->setObjectName(QStringLiteral("is_show_axes"));
 
         gridLayout_2->addWidget(is_show_axes, 2, 2, 1, 1);
 
-        checkBox_9 = new QCheckBox(centralWidget);
-        checkBox_9->setObjectName(QStringLiteral("checkBox_9"));
-
-        gridLayout_2->addWidget(checkBox_9, 2, 4, 1, 1);
-
-        horizontalSpacer_2 = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout_2->addItem(horizontalSpacer_2, 1, 1, 1, 1);
-
         is_show_texture = new QCheckBox(centralWidget);
         is_show_texture->setObjectName(QStringLiteral("is_show_texture"));
 
         gridLayout_2->addWidget(is_show_texture, 1, 2, 1, 1);
 
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout_2->addItem(horizontalSpacer, 2, 1, 1, 1);
-
         horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         gridLayout_2->addItem(horizontalSpacer_4, 0, 1, 1, 1);
 
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_2->addItem(horizontalSpacer, 2, 1, 1, 1);
+
         horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         gridLayout_2->addItem(horizontalSpacer_3, 0, 3, 1, 1);
-
-        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout_2->addItem(horizontalSpacer_5, 1, 3, 1, 1);
 
         horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -190,34 +166,40 @@ public:
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        RotX = new QLabel(centralWidget);
-        RotX->setObjectName(QStringLiteral("RotX"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        WheelSpeed = new QLabel(centralWidget);
+        WheelSpeed->setObjectName(QStringLiteral("WheelSpeed"));
+        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(RotX->sizePolicy().hasHeightForWidth());
-        RotX->setSizePolicy(sizePolicy3);
-        RotX->setMinimumSize(QSize(0, 0));
-        RotX->setMaximumSize(QSize(150, 1000));
-        RotX->setAlignment(Qt::AlignCenter);
+        sizePolicy3.setHeightForWidth(WheelSpeed->sizePolicy().hasHeightForWidth());
+        WheelSpeed->setSizePolicy(sizePolicy3);
+        WheelSpeed->setMinimumSize(QSize(0, 0));
+        WheelSpeed->setMaximumSize(QSize(150, 1000));
+        WheelSpeed->setAlignment(Qt::AlignCenter);
 
-        horizontalLayout_3->addWidget(RotX);
+        horizontalLayout_3->addWidget(WheelSpeed);
 
-        RotXSlider = new QSlider(centralWidget);
-        RotXSlider->setObjectName(QStringLiteral("RotXSlider"));
-        QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        WheelS = new QSlider(centralWidget);
+        WheelS->setObjectName(QStringLiteral("WheelS"));
+        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Fixed);
         sizePolicy4.setHorizontalStretch(0);
         sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(RotXSlider->sizePolicy().hasHeightForWidth());
-        RotXSlider->setSizePolicy(sizePolicy4);
-        RotXSlider->setMaximum(360);
-        RotXSlider->setSingleStep(16);
-        RotXSlider->setPageStep(15);
-        RotXSlider->setOrientation(Qt::Horizontal);
-        RotXSlider->setTickPosition(QSlider::TicksAbove);
-        RotXSlider->setTickInterval(15);
+        sizePolicy4.setHeightForWidth(WheelS->sizePolicy().hasHeightForWidth());
+        WheelS->setSizePolicy(sizePolicy4);
+        WheelS->setMinimum(1);
+        WheelS->setMaximum(100);
+        WheelS->setSingleStep(5);
+        WheelS->setPageStep(5);
+        WheelS->setOrientation(Qt::Horizontal);
+        WheelS->setTickPosition(QSlider::TicksBothSides);
+        WheelS->setTickInterval(5);
 
-        horizontalLayout_3->addWidget(RotXSlider);
+        horizontalLayout_3->addWidget(WheelS);
+
+        label_3 = new QLabel(centralWidget);
+        label_3->setObjectName(QStringLiteral("label_3"));
+
+        horizontalLayout_3->addWidget(label_3);
 
 
         verticalLayout->addLayout(horizontalLayout_3);
@@ -230,61 +212,78 @@ public:
         sizePolicy3.setHeightForWidth(RotY->sizePolicy().hasHeightForWidth());
         RotY->setSizePolicy(sizePolicy3);
         RotY->setMinimumSize(QSize(0, 0));
-        RotY->setMaximumSize(QSize(150, 1000));
-        RotY->setAlignment(Qt::AlignCenter);
+        RotY->setMaximumSize(QSize(100, 1000));
+        RotY->setTextFormat(Qt::AutoText);
+        RotY->setScaledContents(false);
+        RotY->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         horizontalLayout_4->addWidget(RotY);
 
-        RotYSlider = new QSlider(centralWidget);
-        RotYSlider->setObjectName(QStringLiteral("RotYSlider"));
-        sizePolicy4.setHeightForWidth(RotYSlider->sizePolicy().hasHeightForWidth());
-        RotYSlider->setSizePolicy(sizePolicy4);
-        RotYSlider->setMaximum(360);
-        RotYSlider->setSingleStep(16);
-        RotYSlider->setPageStep(15);
-        RotYSlider->setOrientation(Qt::Horizontal);
-        RotYSlider->setTickPosition(QSlider::TicksAbove);
-        RotYSlider->setTickInterval(15);
+        LightX = new QSpinBox(centralWidget);
+        LightX->setObjectName(QStringLiteral("LightX"));
+        sizePolicy4.setHeightForWidth(LightX->sizePolicy().hasHeightForWidth());
+        LightX->setSizePolicy(sizePolicy4);
+        LightX->setMinimum(-9999);
+        LightX->setMaximum(9999);
+        LightX->setSingleStep(10);
+        LightX->setValue(1);
 
-        horizontalLayout_4->addWidget(RotYSlider);
+        horizontalLayout_4->addWidget(LightX);
+
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+        label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_4->addWidget(label);
+
+        LightY = new QSpinBox(centralWidget);
+        LightY->setObjectName(QStringLiteral("LightY"));
+        sizePolicy4.setHeightForWidth(LightY->sizePolicy().hasHeightForWidth());
+        LightY->setSizePolicy(sizePolicy4);
+        LightY->setMinimum(-9999);
+        LightY->setMaximum(9999);
+        LightY->setSingleStep(10);
+        LightY->setValue(1);
+
+        horizontalLayout_4->addWidget(LightY);
+
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout_4->addWidget(label_2);
+
+        LightZ = new QSpinBox(centralWidget);
+        LightZ->setObjectName(QStringLiteral("LightZ"));
+        sizePolicy4.setHeightForWidth(LightZ->sizePolicy().hasHeightForWidth());
+        LightZ->setSizePolicy(sizePolicy4);
+        LightZ->setMinimum(-9999);
+        LightZ->setMaximum(9999);
+        LightZ->setSingleStep(10);
+        LightZ->setValue(1);
+
+        horizontalLayout_4->addWidget(LightZ);
 
 
         verticalLayout->addLayout(horizontalLayout_4);
-
-        horizontalLayout_5 = new QHBoxLayout();
-        horizontalLayout_5->setSpacing(6);
-        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
-        RotZ = new QLabel(centralWidget);
-        RotZ->setObjectName(QStringLiteral("RotZ"));
-        sizePolicy3.setHeightForWidth(RotZ->sizePolicy().hasHeightForWidth());
-        RotZ->setSizePolicy(sizePolicy3);
-        RotZ->setMinimumSize(QSize(0, 0));
-        RotZ->setMaximumSize(QSize(150, 1000));
-        RotZ->setAlignment(Qt::AlignCenter);
-
-        horizontalLayout_5->addWidget(RotZ);
-
-        RotZSlider = new QSlider(centralWidget);
-        RotZSlider->setObjectName(QStringLiteral("RotZSlider"));
-        sizePolicy4.setHeightForWidth(RotZSlider->sizePolicy().hasHeightForWidth());
-        RotZSlider->setSizePolicy(sizePolicy4);
-        RotZSlider->setMaximum(360);
-        RotZSlider->setSingleStep(16);
-        RotZSlider->setPageStep(15);
-        RotZSlider->setOrientation(Qt::Horizontal);
-        RotZSlider->setTickPosition(QSlider::TicksAbove);
-        RotZSlider->setTickInterval(15);
-
-        horizontalLayout_5->addWidget(RotZSlider);
-
-
-        verticalLayout->addLayout(horizontalLayout_5);
 
 
         horizontalLayout->addLayout(verticalLayout);
 
 
         verticalLayout_3->addLayout(horizontalLayout);
+
+        myWidget = new myOpenGLWidget(centralWidget);
+        myWidget->setObjectName(QStringLiteral("myWidget"));
+        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy5.setHorizontalStretch(77);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(myWidget->sizePolicy().hasHeightForWidth());
+        myWidget->setSizePolicy(sizePolicy5);
+        myWidget->setMinimumSize(QSize(0, 0));
+        myWidget->setMaximumSize(QSize(1368, 1312313));
+
+        verticalLayout_3->addWidget(myWidget);
 
         meshProClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(meshProClass);
@@ -299,15 +298,16 @@ public:
         meshProClass->setStatusBar(statusBar);
 
         retranslateUi(meshProClass);
-        QObject::connect(RotZSlider, SIGNAL(valueChanged(int)), myWidget, SLOT(setZRotation(int)));
-        QObject::connect(RotYSlider, SIGNAL(valueChanged(int)), myWidget, SLOT(setYRotation(int)));
-        QObject::connect(RotXSlider, SIGNAL(valueChanged(int)), myWidget, SLOT(setXRotation(int)));
+        QObject::connect(WheelS, SIGNAL(valueChanged(int)), myWidget, SLOT(setWheelSpeed(int)));
         QObject::connect(is_show_edge, SIGNAL(stateChanged(int)), myWidget, SLOT(check_edge_state(int)));
         QObject::connect(is_show_face, SIGNAL(stateChanged(int)), myWidget, SLOT(check_face_state(int)));
         QObject::connect(is_show_point, SIGNAL(stateChanged(int)), myWidget, SLOT(check_point_state(int)));
         QObject::connect(is_show_light, SIGNAL(stateChanged(int)), myWidget, SLOT(check_light_state(int)));
         QObject::connect(is_show_texture, SIGNAL(stateChanged(int)), myWidget, SLOT(check_texture_state(int)));
         QObject::connect(is_show_axes, SIGNAL(stateChanged(int)), myWidget, SLOT(check_axes_state(int)));
+        QObject::connect(LightX, SIGNAL(valueChanged(int)), myWidget, SLOT(setLightPositionX(int)));
+        QObject::connect(LightY, SIGNAL(valueChanged(int)), myWidget, SLOT(setLightPositionY(int)));
+        QObject::connect(LightZ, SIGNAL(valueChanged(int)), myWidget, SLOT(setLightPositionZ(int)));
 
         QMetaObject::connectSlotsByName(meshProClass);
     } // setupUi
@@ -317,16 +317,15 @@ public:
         meshProClass->setWindowTitle(QApplication::translate("meshProClass", "meshPro", 0));
         is_show_light->setText(QApplication::translate("meshProClass", "Light", 0));
         is_show_edge->setText(QApplication::translate("meshProClass", "Edge", 0));
-        checkBox_4->setText(QApplication::translate("meshProClass", "...", 0));
         is_show_face->setText(QApplication::translate("meshProClass", "Face", 0));
         is_show_point->setText(QApplication::translate("meshProClass", "Point", 0));
-        checkBox_6->setText(QApplication::translate("meshProClass", "...", 0));
         is_show_axes->setText(QApplication::translate("meshProClass", "Axes", 0));
-        checkBox_9->setText(QApplication::translate("meshProClass", "...", 0));
         is_show_texture->setText(QApplication::translate("meshProClass", "Texture", 0));
-        RotX->setText(QApplication::translate("meshProClass", "RotX", 0));
-        RotY->setText(QApplication::translate("meshProClass", "RotY", 0));
-        RotZ->setText(QApplication::translate("meshProClass", "RotZ", 0));
+        WheelSpeed->setText(QApplication::translate("meshProClass", "WheelSpeed: 1", 0));
+        label_3->setText(QApplication::translate("meshProClass", "100", 0));
+        RotY->setText(QApplication::translate("meshProClass", "LightX", 0));
+        label->setText(QApplication::translate("meshProClass", "LightY", 0));
+        label_2->setText(QApplication::translate("meshProClass", "LightZ", 0));
     } // retranslateUi
 
 };

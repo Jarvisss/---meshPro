@@ -39,11 +39,35 @@ void myOpenGLWidget::check_axes_state(int state){
 	showAxes = state == Qt::Checked;
 	update();
 }
+
+
+void myOpenGLWidget::setWheelSpeed(int s){
+	qDebug() << "ws:" << s;
+	WheelSpeed = s*1.0 / 1000;
+}
+
+void myOpenGLWidget::setLightPositionX(int x)
+{
+	light_position[0] = x;
+	update();
+}
+
+void myOpenGLWidget::setLightPositionY(int y)
+{
+	light_position[1] = y;
+	update();
+}
+
+void myOpenGLWidget::setLightPositionZ(int z)
+{
+	light_position[2] = z;
+	update();
+}
+
 void myOpenGLWidget::setLight()
 {
 	static GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	static GLfloat mat_shininess[] = { 50.0 };
-	static GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
 	static GLfloat white_light[] = { 0.8, 0.8, 0.8, 1.0 };
 	static GLfloat lmodel_ambient[] = { 0.3, 0.3, 0.3, 1.0 };
 
@@ -59,7 +83,9 @@ void myOpenGLWidget::setLight()
 }
 
 void myOpenGLWidget::initMesh(MyMesh* themesh){
-	this->myMesh = themesh;
+	myMesh = themesh;
+	totalVertices = myMesh->n_vertices();
+	//startTimer(100);
 }
 
 void myOpenGLWidget::render(){
@@ -114,7 +140,7 @@ void myOpenGLWidget::render(){
 //	}
 //}
 void myOpenGLWidget::drawPoint(){
-	glPointSize(2);
+	//glGenBuffers(2, uiVBO);
 	glBegin(GL_POINTS);
 	for (auto it = myMesh->vertices_begin(); it != myMesh->vertices_end(); ++it)
 	{
@@ -156,17 +182,17 @@ void myOpenGLWidget::drawFace(){
 	
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture_[0]);
+	qDebug() << " tex id = " << texture_[0];
 	for (auto f_it = myMesh->faces_begin(); f_it != myMesh->faces_end(); ++f_it){
 		glBegin(GL_TRIANGLES);
 		for (auto fv_it = myMesh->fv_iter(*f_it); fv_it.is_valid(); ++fv_it){
-			
 			glTexCoord2fv(myMesh->texcoord2D(*fv_it).data());
 			glNormal3fv(myMesh->normal(*fv_it).data());
 			glVertex3fv(myMesh->point(*fv_it).data());
 		}
 		glEnd();
 	}
-
+	glDisable(GL_TEXTURE_2D);
 
 }
 void myOpenGLWidget::drawAxes()
@@ -285,6 +311,8 @@ void myOpenGLWidget::initializeGL()
 	glEnable(GL_DEPTH_TEST);
 	glClearDepth(1);
 
+	light_position[0] = light_position[1] = light_position[2] = 1;
+	light_position[3] = 0;
 	setLight();
 }
 void myOpenGLWidget::paintGL()
@@ -340,6 +368,7 @@ void myOpenGLWidget::resizeGL(int w, int h)
 }
 void myOpenGLWidget::timerEvent(QTimerEvent * e)
 {
+	qDebug() << "time";
 	update();
 }
 void myOpenGLWidget::mousePressEvent(QMouseEvent *event)
@@ -379,7 +408,7 @@ void myOpenGLWidget::mouseMoveEvent(QMouseEvent *e)
 }
 void myOpenGLWidget::wheelEvent(QWheelEvent * event)
 {
-	eye_distance_ += event->delta()*0.001;
+	eye_distance_ += event->delta()*WheelSpeed;
 	eye_distance_ = eye_distance_ < 0 ? 0 : eye_distance_;
 
 	update();
