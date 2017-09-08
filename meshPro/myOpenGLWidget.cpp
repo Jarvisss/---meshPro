@@ -102,7 +102,14 @@ void myOpenGLWidget::render(){
 	}
 		
 	if (showAxes)
+	{
+		glDisable(GL_LIGHTING);
+		glDisable(GL_LIGHT0);
 		drawAxes();
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+	}
+		
 }
 
 //void myOpenGLWidget::writeMesh(){
@@ -179,9 +186,7 @@ void myOpenGLWidget::drawEdge(){
 	
 }
 void myOpenGLWidget::drawFace(){
-	
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture_[0]);
 	qDebug() << " tex id = " << texture_[0];
 	for (auto f_it = myMesh->faces_begin(); f_it != myMesh->faces_end(); ++f_it){
 		glBegin(GL_TRIANGLES);
@@ -193,7 +198,6 @@ void myOpenGLWidget::drawFace(){
 		glEnd();
 	}
 	glDisable(GL_TEXTURE_2D);
-
 }
 void myOpenGLWidget::drawAxes()
 {
@@ -272,11 +276,6 @@ void myOpenGLWidget::loadTexture(){
 }
 void myOpenGLWidget::setBackGroundTexture(){
 	//glLoadIdentity();
-	
-	glEnable(GL_TEXTURE_2D);
-	glPushMatrix();
-	//glTranslatef(0, 0, -10);
-
 	glBindTexture(GL_TEXTURE_2D, texture_[0]);
 	glBegin(GL_QUADS);
 	glTexCoord2f(0.0f, 0.0f);
@@ -288,8 +287,6 @@ void myOpenGLWidget::setBackGroundTexture(){
 	glTexCoord2f(0.0f, 1.0f);
 	glVertex2f(-1,1);
 	glEnd();
-	glPopMatrix();
-
 	qDebug() << "back ok" << endl;
 	//float x_ratio = (float)this->width() / p_width;
 	//float y_ratio = (float)this->height() / p_height;
@@ -299,6 +296,7 @@ void myOpenGLWidget::setBackGroundTexture(){
 void myOpenGLWidget::initializeGL()
 {
 	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
 	glShadeModel(GL_SMOOTH);
 
 	glEnable(GL_DOUBLEBUFFER);
@@ -318,7 +316,6 @@ void myOpenGLWidget::initializeGL()
 void myOpenGLWidget::paintGL()
 {
 	glShadeModel(GL_SMOOTH);
-	
 	if (showLight)
 		setLight();
 	else
@@ -326,9 +323,29 @@ void myOpenGLWidget::paintGL()
 		glDisable(GL_LIGHTING);
 		glDisable(GL_LIGHT0);
 	}
+
+	glDisable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-1, 1, -1, 1, 0, 3);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glEnable(GL_TEXTURE_2D);
+
+	glDisable(GL_LIGHTING);
+	glDisable(GL_LIGHT0);
+	setBackGroundTexture();
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 	
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
 
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45.0, width()/ height(), 0.001, 1000);
 
+	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	register GLfloat eyepos[3];
